@@ -2,11 +2,18 @@ plugins {
     id "java-library"
     id "kotlin"
     id "maven-publish"
+    id "signing"
+}
+
+ext {
+    groupId = 'ru.radiationx'
+    artifactId = "kdiffer"
 }
 
 compileKotlin {
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs += ["-module-name", "ru.radiationx.kdiffer"]
     }
 }
 compileTestKotlin {
@@ -20,50 +27,4 @@ dependencies {
     testImplementation "junit:junit:4.13.2"
 }
 
-
-/*
-* Publishing Part
-* */
-
-//Set env variable GPR_USER & GPR_API_KEY if not adding a properties file
-def githubProperties = new Properties()
-githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
-
-def getVersionName = { ->
-    return "1.0.0"
-}
-
-def getArtifactId = { ->
-    return "kdiffer"
-}
-
-def getGroupId = { ->
-    return "ru.radiationx"
-}
-
-def getGitHubUrl = { ->
-    return "https://maven.pkg.github.com/RadiationX/KDiffer"
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            bar(MavenPublication) {
-                groupId = getGroupId()
-                artifactId = getArtifactId()
-                version = getVersionName()
-                artifact("$buildDir/libs/${getArtifactId()}.jar")
-            }
-        }
-        repositories {
-            maven {
-                name = "GitHubPackages"
-                url = uri(getGitHubUrl())
-                credentials {
-                    username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
-                    password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
-                }
-            }
-        }
-    }
-}
+apply from: rootProject.file('publishing.gradle')

@@ -1,0 +1,91 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+def githubProperties = new Properties()
+githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
+
+def sonatypeProps = new Properties()
+sonatypeProps.load(new FileInputStream(rootProject.file("sonatype.properties")))
+
+project.ext["signing.keyId"] = sonatypeProps.getProperty("signing.keyId")
+project.ext["signing.password"] = sonatypeProps.getProperty("signing.password")
+project.ext["signing.secretKeyRingFile"] = sonatypeProps.getProperty("signing.secretKeyRingFile")
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    getArchiveClassifier().set("sources")
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            myPub(MavenPublication) {
+                from components.kotlin
+                artifacts {
+                    archives sourcesJar
+                }
+
+                groupId = project.ext.groupId
+                artifactId = project.ext.artifactId
+                version = "1.0.0"
+
+                pom {
+                    name = "KDiffer"
+                    description = "Simple declarative(?) object differ with Kotlin DSL"
+                    url = "https://github.com/RadiationX/KDiffer"
+
+                    licenses {
+                        license {
+                            name = "The Apache License, Version 2.0"
+                            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = "RadiationX"
+                            name = "Evgeny Nizamiev"
+                            email = "radiationx@yandex.ru"
+                        }
+                    }
+
+                    scm {
+                        url = "https://github.com/RadiationX/KDiffer"
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/RadiationX/KDiffer")
+                credentials {
+                    username = githubProperties["gpr.usr"] ?: System.getenv("GPR_USER")
+                    password = githubProperties["gpr.key"] ?: System.getenv("GPR_API_KEY")
+                }
+            }
+
+            maven {
+                name = "sonatypeStaging"
+                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+                credentials {
+                    username = sonatypeProps.getProperty("ossrhUsername")
+                    password = sonatypeProps.getProperty("ossrhPassword")
+                }
+            }
+
+            maven {
+                name = "sonatypeSnapshots"
+                url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+                credentials {
+                    username = sonatypeProps.getProperty("ossrhUsername")
+                    password = sonatypeProps.getProperty("ossrhPassword")
+                }
+            }
+        }
+    }
+
+    signing {
+        sign(publishing.publications)
+    }
+}

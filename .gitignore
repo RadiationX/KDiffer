@@ -86,3 +86,5 @@ lint/tmp/
 # lint/reports/
 
 github.properties
+sonatype.properties
+sonatype_upload.gpg
