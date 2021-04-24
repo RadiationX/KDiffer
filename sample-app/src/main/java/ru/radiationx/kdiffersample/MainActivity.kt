@@ -1,58 +1,57 @@
 package ru.radiationx.kdiffersample
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import ru.radiationx.kdiffer.dsl.ext.any
-import ru.radiationx.kdiffer.dsl.ext.call
-import ru.radiationx.kdiffer.dsl.ext.value
-import ru.radiationx.kdiffer.mutableLiveDiffer
+import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
+import ru.radiationx.kdiffersample.databinding.ActivityMainBinding
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(R.layout.activity_main) {
+
+    private val binding by viewBinding<ActivityMainBinding>()
+    private val postAdapter by lazy { PostAdapter() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        runDiffer()
-    }
 
-    data class AmazindData(
-        val title: String,
-        val date: Date? = null,
-        val content: AmazingContent? = null
-    )
-
-    data class AmazingContent(
-        val header: String? = null,
-        val body: String? = null,
-        val footer: String? = null
-    )
-
-    fun runDiffer() {
-
-        val dataDiffer = mutableLiveDiffer<AmazindData> {
-            any { it } call {
-                Log.d("kek", "self updated: $it")
-            }
-            value { it.title } call { Log.d("kek", "title changed: $it") }
-            value { it.content?.footer } call { Log.d("kek", "content.footer $it") }
+        with(binding.recyclerView) {
+            layoutManager = LinearLayoutManager(context)
+            adapter = postAdapter
         }
 
-        val data = AmazindData("")
-        data.component1()
-
-        dataDiffer.accept(AmazindData("title1"))
-        dataDiffer.clear()
-        dataDiffer.accept(AmazindData("title1"))
-        dataDiffer.accept(AmazindData("title1", Date()))
-        dataDiffer.accept(AmazindData("title1", Date(), AmazingContent(body = "hello body")))
-        dataDiffer.accept(
-            AmazindData(
-                "title1",
-                Date(),
-                AmazingContent(body = "hello body", footer = "hello footer")
+        postAdapter.submitList(
+            listOf(
+                PostItemState(
+                    "psot_1",
+                    PostItemHeaderState(
+                        "Author Name",
+                        "Group Name",
+                        Date()
+                    ),
+                    PostItemContentState(
+                        "ContentText",
+                        null
+                    ),
+                    PostItemFooterState(
+                        100,
+                        200,
+                        10,
+                        10000,
+                        false,
+                        false,
+                        false
+                    ),
+                    PostItemCommentState(
+                        "comment_1",
+                        "Author Name",
+                        "Awesome Comment",
+                        22,
+                        false
+                    )
+                )
             )
         )
-
     }
+
 }

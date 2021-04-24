@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayoutCompat"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?colorSurface">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/postFooterLikes"
+        style="@style/PostFooterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/heart_outline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="111" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/postFooterComments"
+        style="@style/PostFooterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/comment_text_outline"
+        app:layout_constraintStart_toEndOf="@+id/postFooterLikes"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="111" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/postFooterSaves"
+        style="@style/PostFooterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/bookmark_plus_outline"
+        app:layout_constraintStart_toEndOf="@+id/postFooterComments"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="111" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/postFooterViews"
+        style="@style/PostFooterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:textAppearance="?textAppearanceCaption"
+        app:icon="@drawable/eye_outline"
+        app:iconSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="111" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
