@@ -2,10 +2,6 @@ package ru.radiationx.kdiffersample
 
 import android.util.Log
 import androidx.core.view.isVisible
-import androidx.transition.AutoTransition
-import androidx.transition.Fade
-import androidx.transition.TransitionManager
-import androidx.transition.TransitionSet
 import ru.radiationx.kdiffer.dsl.ext.call
 import ru.radiationx.kdiffer.dsl.ext.registerMutableDiffer
 import ru.radiationx.kdiffer.dsl.ext.value
@@ -25,7 +21,7 @@ class DifferPostItemViewHolder(
             headerBinding.postAuthorName.text = it
         }
         value { it.date } call {
-            headerBinding.postDate.text = it.time.toString()
+            headerBinding.postDate.text = it
         }
     }
 
@@ -48,16 +44,16 @@ class DifferPostItemViewHolder(
             TransitionManager.beginDelayedTransition(footerBinding.root, AutoTransition())
         }*/
         value { it.likes } call {
-            footerBinding.postFooterLikes.text = it.toString()
+            footerBinding.postFooterLikes.text = it
         }
         value { it.comments } call {
-            footerBinding.postFooterComments.text = it.toString()
+            footerBinding.postFooterComments.text = it
         }
         value { it.saves } call {
-            footerBinding.postFooterSaves.text = it.toString()
+            footerBinding.postFooterSaves.text = it
         }
         value { it.views } call {
-            footerBinding.postFooterViews.text = it.toString()
+            footerBinding.postFooterViews.text = it
         }
     }
 
@@ -77,7 +73,7 @@ class DifferPostItemViewHolder(
             commentBinding.commentText.text = it
         }
         value { it?.likes } call {
-            commentBinding.commentLikes.text = (it ?: 0).toString()
+            commentBinding.commentLikes.text = it ?: "0"
         }
     }
 

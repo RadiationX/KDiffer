@@ -17,7 +17,7 @@ class DefaultPostItemViewHolder(
         with(binding.postHeader) {
             postGroupName.text = header.groupName
             postAuthorName.text = header.authorName
-            postDate.text = header.date.time.toString()
+            postDate.text = header.date
         }
 
         with(binding.postContent) {
@@ -27,17 +27,17 @@ class DefaultPostItemViewHolder(
         }
 
         with(binding.postFooter) {
-            postFooterLikes.text = footer.likes.toString()
-            postFooterComments.text = footer.comments.toString()
-            postFooterSaves.text = footer.saves.toString()
-            postFooterViews.text = footer.views.toString()
+            postFooterLikes.text = footer.likes
+            postFooterComments.text = footer.comments
+            postFooterSaves.text = footer.saves
+            postFooterViews.text = footer.views
         }
 
         with(binding.postFooterComment) {
             root.isVisible = comment != null
             commentAuthorName.text = comment?.authorName
             commentText.text = comment?.commentText
-            commentLikes.text = comment?.likes?.toString()
+            commentLikes.text = comment?.likes
         }
     }
 }
