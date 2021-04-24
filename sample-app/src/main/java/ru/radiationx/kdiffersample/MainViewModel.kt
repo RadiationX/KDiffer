@@ -1,8 +1,11 @@
 package ru.radiationx.kdiffersample
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.plus
 import ru.radiationx.kdiffersample.data.FeedRepository
 import ru.radiationx.kdiffersample.data.entity.PostEntity
 
@@ -20,11 +23,13 @@ class MainViewModel(
     private fun observePosts() {
         repository
             .observe()
-            .map { it.map { post -> post.toState() } }
+            .map {
+                it.map { post -> post.toState() }
+            }
             .onEach {
                 _postsItemsState.value = it
             }
-            .launchIn(viewModelScope)
+            .launchIn(viewModelScope + Dispatchers.IO)
     }
 
     private fun PostEntity.toState() = PostItemState(

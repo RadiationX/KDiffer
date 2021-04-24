@@ -1,10 +1,12 @@
 package ru.radiationx.kdiffersample.data
 
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.launch
 import ru.radiationx.kdiffersample.data.entity.CommentEntity
 import ru.radiationx.kdiffersample.data.entity.CommentUpdateEntity
 import ru.radiationx.kdiffersample.data.entity.PostUpdateEntity
@@ -12,7 +14,10 @@ import kotlin.concurrent.fixedRateTimer
 
 class UpdatesDataSource {
 
-    private val updates = (1 until 5).map {
+
+    val scope = CoroutineScope(Dispatchers.IO)
+
+    private val updates = (1 until 10).map {
         PostUpdateEntity(
             postId = "post_$it",
             likes = 0,
@@ -28,7 +33,7 @@ class UpdatesDataSource {
     private val updatesState = MutableStateFlow(updates)
 
     init {
-        val timer = fixedRateTimer(period = 500) {
+        val timer = fixedRateTimer(period = 1000) {
             updatePosts()
         }
     }
@@ -46,15 +51,17 @@ class UpdatesDataSource {
         return flow<CommentEntity> { }
     }
 
+
     private fun updatePosts() {
-        Log.d("kekeke", "updatePosts")
-        updatesState.value = updatesState.value.map {
-            it.copy(
-                likes = it.likes + randomLike(),
-                comments = it.comments + randomComment(),
-                saves = it.saves + randomSaves(),
-                views = it.views + randomViews()
-            )
+        scope.launch {
+            updatesState.value = updatesState.value.map {
+                it.copy(
+                    likes = it.likes + randomLike(),
+                    comments = it.comments + randomComment(),
+                    saves = it.saves + randomSaves(),
+                    views = it.views + randomViews()
+                )
+            }
         }
     }
 

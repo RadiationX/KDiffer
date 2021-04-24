@@ -18,7 +18,6 @@ class FeedRepository {
             emit(feedDataSource.getPosts())
         }
             .combine(updatesDataSource.observePosts()) { posts: List<PostEntity>, updates: List<PostUpdateEntity> ->
-                Log.d("kekeke", "combine posts for ${updates.map { it.postId }}")
                 posts.map { post ->
                     val update = updates.firstOrNull { post.id == it.postId }
                     if (post.id == update?.postId) {

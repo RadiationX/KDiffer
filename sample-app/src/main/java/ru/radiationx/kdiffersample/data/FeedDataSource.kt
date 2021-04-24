@@ -6,7 +6,7 @@ import java.util.*
 class FeedDataSource {
 
     suspend fun getPosts(): List<PostEntity> {
-        return (1 until 5).map { createPost(it) }
+        return (1 until 10).map { createPost(it) }
     }
 
     private fun createPost(index: Int) = PostEntity(
@@ -16,7 +16,7 @@ class FeedDataSource {
         groupName = "Group Name $index",
         date = Date(),
         contentText = "ContentText",
-        contentImage = "url",
+        contentImage = null,
         likes = 0,
         comments = 0,
         saves = 0,

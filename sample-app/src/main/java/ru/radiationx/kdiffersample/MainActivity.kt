@@ -14,7 +14,8 @@ import ru.radiationx.kdiffersample.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private val binding by viewBinding<ActivityMainBinding>()
-    private val postAdapter by lazy { PostAdapter() }
+    //private val postAdapter by lazy { DefaultPostAdapter() }
+    private val postAdapter by lazy { DifferPostAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,11 +24,12 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         with(binding.recyclerView) {
             layoutManager = LinearLayoutManager(context)
+            addItemDecoration(PostDecorator())
             adapter = postAdapter
+            itemAnimator = null
         }
 
         viewModel.postsItemsState.onEach {
-            Log.d("kekeke", "postsItemsState $it")
             postAdapter.submitList(it)
         }.launchIn(lifecycleScope)
     }
