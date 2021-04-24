@@ -1,5 +1,6 @@
 package ru.radiationx.kdiffersample
 
+import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
 
 object PostItemDiffCallback : DiffUtil.ItemCallback<PostItemState>() {

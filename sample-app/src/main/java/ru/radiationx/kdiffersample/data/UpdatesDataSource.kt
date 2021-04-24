@@ -1,6 +1,5 @@
 package ru.radiationx.kdiffersample.data
 
-import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -33,7 +32,7 @@ class UpdatesDataSource {
     private val updatesState = MutableStateFlow(updates)
 
     init {
-        val timer = fixedRateTimer(period = 1000) {
+        val timer = fixedRateTimer(period = (1000 / 144f).toLong()) {
             updatePosts()
         }
     }
@@ -54,19 +53,19 @@ class UpdatesDataSource {
 
     private fun updatePosts() {
         scope.launch {
-            updatesState.value = updatesState.value.map {
-                it.copy(
-                    likes = it.likes + randomLike(),
-                    comments = it.comments + randomComment(),
-                    saves = it.saves + randomSaves(),
-                    views = it.views + randomViews()
+            updatesState.value = updatesState.value.mapIndexed { index, post ->
+                post.copy(
+                    likes = (post.likes + randomLike()).coerceAtLeast(0),
+                    comments = (post.comments + randomComment()).coerceAtLeast(0),
+                    saves = (post.saves + randomSaves()).coerceAtLeast(0),
+                    views = (post.views + randomViews()).coerceAtLeast(0)
                 )
             }
         }
     }
 
-    private fun randomLike() = (-10..30).random()
-    private fun randomComment() = (-1..5).random()
-    private fun randomSaves() = (-1..3).random()
+    private fun randomLike() = (-5..15).random()
+    private fun randomComment() = (-1..3).random()
+    private fun randomSaves() = (-1..2).random()
     private fun randomViews() = (0..100).random()
 }

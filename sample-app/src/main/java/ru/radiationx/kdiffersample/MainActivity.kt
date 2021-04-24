@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -26,7 +28,11 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(PostDecorator())
             adapter = postAdapter
-            itemAnimator = null
+            Log.d("kekeke", "itemanimator ${itemAnimator}")
+            (itemAnimator as? DefaultItemAnimator)?.apply {
+                supportsChangeAnimations = false
+            }
+            //itemAnimator = null
         }
 
         viewModel.postsItemsState.onEach {

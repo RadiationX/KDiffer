@@ -1,6 +1,11 @@
 package ru.radiationx.kdiffersample
 
+import android.util.Log
 import androidx.core.view.isVisible
+import androidx.transition.AutoTransition
+import androidx.transition.Fade
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
 import ru.radiationx.kdiffer.dsl.ext.call
 import ru.radiationx.kdiffer.dsl.ext.registerMutableDiffer
 import ru.radiationx.kdiffer.dsl.ext.value
@@ -39,6 +44,9 @@ class DifferPostItemViewHolder(
 
     private val footerDiffer = mutableLiveDiffer<PostItemFooterState> {
         val footerBinding = binding.postFooter
+        /*value { it.length() } call {
+            TransitionManager.beginDelayedTransition(footerBinding.root, AutoTransition())
+        }*/
         value { it.likes } call {
             footerBinding.postFooterLikes.text = it.toString()
         }
@@ -52,6 +60,10 @@ class DifferPostItemViewHolder(
             footerBinding.postFooterViews.text = it.toString()
         }
     }
+
+    fun PostItemFooterState.length(): Int = listOf(likes, comments, saves, views)
+        .map { it.toString().length }
+        .sum()
 
     private val commentDiffer = mutableLiveDiffer<PostItemCommentState?> {
         val commentBinding = binding.postFooterComment
@@ -74,6 +86,10 @@ class DifferPostItemViewHolder(
         value { it.content }.registerMutableDiffer(contentDiffer)
         value { it.footer }.registerMutableDiffer(footerDiffer)
         value { it.comment }.registerMutableDiffer(commentDiffer)
+    }
+
+    init {
+        Log.d("kekeke", "init vh $this")
     }
 
     override fun bind(item: PostItemState, payloads: MutableList<Any>?) {
