@@ -32,7 +32,7 @@ class UpdatesDataSource {
     private val updatesState = MutableStateFlow(updates)
 
     init {
-        val timer = fixedRateTimer(period = (1000 / 144f).toLong()) {
+        val timer = fixedRateTimer(period = (1000 / 60f).toLong()) {
             updatePosts()
         }
     }
@@ -64,7 +64,7 @@ class UpdatesDataSource {
         }
     }
 
-    private fun randomLike() = (-5..15).random()
+    private fun randomLike() = (-5..150).random()
     private fun randomComment() = (-1..3).random()
     private fun randomSaves() = (-1..2).random()
     private fun randomViews() = (0..100).random()

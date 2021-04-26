@@ -15,7 +15,7 @@ class FeedDataSource {
         authorAvatarUrl = "url",
         groupName = "Group Name $index",
         date = Date(),
-        contentText = "ContentText",
+        contentText = null,
         contentImage = null,
         likes = 0,
         comments = 0,
