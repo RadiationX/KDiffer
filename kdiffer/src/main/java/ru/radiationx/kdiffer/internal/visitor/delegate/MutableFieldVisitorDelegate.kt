@@ -16,10 +16,11 @@ internal class MutableFieldVisitorDelegate<Model, Field, Result, DF : DifferFiel
     fun visit(modelScope: ValueScope<Model>): Result? {
         val newValue = selector.valueProvider.invoke(modelScope, modelScope.new)
 
+        val noScope = fieldScope == null
         val scope = fieldScope ?: FieldScope(modelScope, ValueScope(null, newValue))
         fieldScope = scope
         return scope.field.update(newValue) {
-            val hasChanges = selector.diffDetector.invoke(scope.field.old, newValue)
+            val hasChanges = noScope || selector.diffDetector.invoke(scope.field.old, newValue)
 
             if (hasChanges) {
                 mapper.map(scope, differFields, newValue)

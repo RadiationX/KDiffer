@@ -1,58 +1,90 @@
 package ru.radiationx.kdiffersample
 
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import ru.radiationx.kdiffer.dsl.ext.any
-import ru.radiationx.kdiffer.dsl.ext.call
-import ru.radiationx.kdiffer.dsl.ext.value
-import ru.radiationx.kdiffer.mutableLiveDiffer
-import java.util.*
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
+import by.kirich1409.viewbindingdelegate.viewBinding
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import ru.radiationx.kdiffersample.adapter.DefaultPostAdapter
+import ru.radiationx.kdiffersample.adapter.DifferPostAdapter
+import ru.radiationx.kdiffersample.adapter.PostDecorator
+import ru.radiationx.kdiffersample.data.FeedRepository
+import ru.radiationx.kdiffersample.data.entity.PostEntity
+import ru.radiationx.kdiffersample.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(R.layout.activity_main) {
+
+    private val repository = FeedRepository()
+    private val viewModel = MainViewModel(repository)
+    private val binding by viewBinding<ActivityMainBinding>()
+    private var activeDiffer = false
+
+    private val defaultPostAdapter = DefaultPostAdapter()
+    private val differPostAdapter = DifferPostAdapter()
+    private var postAdapter = getActualAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        runDiffer()
-    }
+        updateTitle()
 
-    data class AmazindData(
-        val title: String,
-        val date: Date? = null,
-        val content: AmazingContent? = null
-    )
-
-    data class AmazingContent(
-        val header: String? = null,
-        val body: String? = null,
-        val footer: String? = null
-    )
-
-    fun runDiffer() {
-
-        val dataDiffer = mutableLiveDiffer<AmazindData> {
-            any { it } call {
-                Log.d("kek", "self updated: $it")
+        with(binding.recyclerView) {
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(PostDecorator())
+            adapter = postAdapter
+            (itemAnimator as? DefaultItemAnimator)?.apply {
+                supportsChangeAnimations = false
             }
-            value { it.title } call { Log.d("kek", "title changed: $it") }
-            value { it.content?.footer } call { Log.d("kek", "content.footer $it") }
         }
 
-        val data = AmazindData("")
-        data.component1()
+        viewModel.postsItemsState.onEach {
+            postAdapter.submitList(it)
+        }.launchIn(lifecycleScope)
+    }
 
-        dataDiffer.accept(AmazindData("title1"))
-        dataDiffer.clear()
-        dataDiffer.accept(AmazindData("title1"))
-        dataDiffer.accept(AmazindData("title1", Date()))
-        dataDiffer.accept(AmazindData("title1", Date(), AmazingContent(body = "hello body")))
-        dataDiffer.accept(
-            AmazindData(
-                "title1",
-                Date(),
-                AmazingContent(body = "hello body", footer = "hello footer")
-            )
-        )
+    override fun onStart() {
+        super.onStart()
+        repository.initTimer()
+    }
 
+    override fun onStop() {
+        super.onStop()
+        repository.cancelTimer()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menu.add("Change adapter")
+            .setOnMenuItemClickListener {
+                activeDiffer = !activeDiffer
+                updateAdapter()
+                updateTitle()
+                return@setOnMenuItemClickListener true
+            }
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun updateAdapter() {
+        postAdapter = getActualAdapter()
+        binding.recyclerView.adapter = postAdapter
+    }
+
+    private fun updateTitle() {
+        supportActionBar?.subtitle = if (activeDiffer) {
+            "Active: differ"
+        } else {
+            "Active: default"
+        }
+    }
+
+    private fun getActualAdapter(): ListAdapter<PostEntity, *> = if (activeDiffer) {
+        differPostAdapter
+    } else {
+        defaultPostAdapter
     }
 }
