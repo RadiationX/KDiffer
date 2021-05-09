@@ -34,18 +34,14 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
         updateTitle()
 
-
         with(binding.recyclerView) {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(PostDecorator())
             adapter = postAdapter
-            Log.d("kekeke", "itemanimator ${itemAnimator}")
             (itemAnimator as? DefaultItemAnimator)?.apply {
                 supportsChangeAnimations = false
             }
-            //itemAnimator = null
         }
-
 
         viewModel.postsItemsState.onEach {
             postAdapter.submitList(it)
@@ -63,7 +59,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menu.add("change")
+        menu.add("Change adapter")
             .setOnMenuItemClickListener {
                 activeDiffer = !activeDiffer
                 updateAdapter()
