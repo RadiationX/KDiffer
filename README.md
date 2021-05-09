@@ -17,6 +17,13 @@ dependencies {
 }
 ```
 ## Examples
+### Sample android app
+No arch, only for see difference in real using. Look at DefaultPostItemViewHolder and DifferPostItemViewHolder.\
+The example is very abstract, since no application will have data updates at a rate of 60 times per second and with such sub-optimal adapters. But in this example, you can clearly see how the affect is that unnecessary updates occur in the UI.\
+**Highly recommended use release build type.** 
+
+### Sample tests
+Sample unit tests can run from sample-app module. For playground or if lazy for test on android.
 
 ### Live differs
 Uses for do something by callbacks on changed fields
@@ -129,6 +136,22 @@ mutableLiveDiffer<Model> {
     value { it.date } call { /* changes by equals */ }
     ref { it.date } call { /* changes by reference */ }
     any { it.date } call { /* any model change */ }
+    
+    value {
+        // model value
+        old
+        new
+        
+        it.date
+    } call {
+        // model values
+        parent.old
+        parent.new
+        
+        // field values
+        field.old
+        field.new
+    }
 
     // also possible use "ref" and "any"
     value { it.sub } withMutableDiffer {}
@@ -153,15 +176,33 @@ mutableModelDiffer<Model> {
     value("val_date") { it.date } /* changes by equals */
     ref("ref_date") { it.date } /* changes by reference */
     any("any_date") { it.date } /* any model change */
+    
+    value("val_date_ts") {
+        // model value
+        old
+        new
+        
+        it.date
+    } map {
+        // model values
+        parent.old
+        parent.new
+        
+        // field values
+        field.old
+        field.new
+        
+        it.time
+    }
 
     // map field to something. also possible use "ref" and "any"
-    value("val_date") { it.date } map { SimpleDateFormat("HH:mm").format(it) }
+    value("val_date_mapped") { it.date } map { SimpleDateFormat("HH:mm").format(it) }
 
     // map field to Map<String, *> with differ. also possible use "ref" and "any"
-    value("val_date") { it.sub } withMutableDiffer {}
-    value("val_date") { it.sub } withStatelessDiffer {}
-    value("val_date") { it.sub }.registerMutableDiffer(anotherDiffer)
-    value("val_date") { it.sub }.registerStatelessDiffer(anotherDiffer)
+    value("val_sub") { it.sub } withMutableDiffer {}
+    value("val_sub") { it.sub } withStatelessDiffer {}
+    value("val_sub") { it.sub }.registerMutableDiffer(anotherDiffer)
+    value("val_sub") { it.sub }.registerStatelessDiffer(anotherDiffer)
 }
 ```
 
