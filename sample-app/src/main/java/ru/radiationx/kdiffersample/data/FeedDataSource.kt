@@ -15,7 +15,7 @@ class FeedDataSource {
         authorAvatarUrl = "url",
         groupName = "Group Name $index",
         date = Date(),
-        contentText = null,
+        contentText = "Hello there in post $index. Watch <a href=\"https://google.com/\">this awesome link</a> and how beautiful this <b>rich<i>text<u>in post</u></i></b>.",
         contentImage = null,
         likes = 0,
         comments = 0,

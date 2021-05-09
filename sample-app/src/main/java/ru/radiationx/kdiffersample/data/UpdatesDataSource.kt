@@ -32,7 +32,7 @@ class UpdatesDataSource {
     private val updatesState = MutableStateFlow(updates)
 
     init {
-        val timer = fixedRateTimer(period = (1000 / 60f).toLong()) {
+        val timer = fixedRateTimer(period = (1000 / 1f).toLong()) {
             updatePosts()
         }
     }

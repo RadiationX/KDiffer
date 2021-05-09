@@ -69,7 +69,7 @@ class MainViewModel(
     )
 
     private fun Date.humanReadable(): String {
-        return humanReadableReal()
+        return time.toString()
     }
 
     private fun Int.humanReadable(): String {

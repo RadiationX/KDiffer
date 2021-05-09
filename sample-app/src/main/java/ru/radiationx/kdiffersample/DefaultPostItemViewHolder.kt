@@ -1,5 +1,6 @@
 package ru.radiationx.kdiffersample
 
+import android.text.Html
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import ru.radiationx.kdiffersample.databinding.ItemPostBinding
@@ -21,7 +22,7 @@ class DefaultPostItemViewHolder(
         }
 
         with(binding.postContent) {
-            postContentText.text = content.contentText
+            postContentText.text = Html.fromHtml(content.contentText)
             postContentText.isVisible = content.contentText != null
             postContentImage.isVisible = content.contentImage != null
         }

@@ -1,5 +1,6 @@
 package ru.radiationx.kdiffersample
 
+import android.text.Html
 import android.util.Log
 import androidx.core.view.isVisible
 import ru.radiationx.kdiffer.dsl.ext.call
@@ -28,7 +29,7 @@ class DifferPostItemViewHolder(
     private val contentDiffer = mutableLiveDiffer<PostItemContentState> {
         val contentBinding = binding.postContent
         value { it.contentText } call {
-            contentBinding.postContentText.text = it
+            contentBinding.postContentText.text = Html.fromHtml(it)
         }
         value { it.contentText != null } call {
             contentBinding.postContentText.isVisible = it
