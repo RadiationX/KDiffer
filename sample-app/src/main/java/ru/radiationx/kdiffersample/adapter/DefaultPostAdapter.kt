@@ -1,5 +1,6 @@
 package ru.radiationx.kdiffersample.adapter
 
+import ru.radiationx.kdiffersample.DefaultPostItemViewHolder
 import ru.radiationx.kdiffersample.databinding.ItemPostBinding
 
 class DefaultPostAdapter : PostAdapter<DefaultPostItemViewHolder>() {

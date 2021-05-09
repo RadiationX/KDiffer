@@ -10,6 +10,7 @@ import java.util.*
 @SuppressLint("ConstantLocale")
 private val dateFormat = SimpleDateFormat("HH:mm dd.MM.yyyy", Locale.getDefault())
 
+@Suppress("DEPRECATION")
 fun String.formatHtml(): CharSequence {
     return Html.fromHtml(this)
 }

@@ -33,8 +33,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
         updateTitle()
 
-        LiveDifferSamples().basic()
-
         with(binding.recyclerView) {
             layoutManager = LinearLayoutManager(context)
             addItemDecoration(PostDecorator())

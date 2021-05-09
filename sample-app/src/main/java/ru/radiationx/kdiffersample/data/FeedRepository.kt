@@ -26,7 +26,7 @@ class FeedRepository {
 
     fun initTimer() {
         cancelTimer()
-        timer = fixedRateTimer(period = (1000 / 10f).toLong()) {
+        timer = fixedRateTimer(period = (1000 / 60f).toLong()) {
             updatePosts()
         }
     }
@@ -67,7 +67,7 @@ class FeedRepository {
 
     private fun updatePosts() {
         scope.launch {
-            updatesState.value = updatesState.value.mapIndexed { index, post ->
+            updatesState.value = updatesState.value.mapIndexed { _, post ->
                 post.copy(
                     likes = (post.likes + randomLike()).coerceAtLeast(0),
                     comments = (post.comments + randomComment()).coerceAtLeast(0),

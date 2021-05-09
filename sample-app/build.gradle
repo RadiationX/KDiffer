@@ -17,7 +17,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('/Users/radiationx/Desktop/signing/debug.keystore')
+            storeFile file('../signing/debug.keystore')
             keyAlias 'androiddebugkey'
             storePassword 'android'
             keyPassword 'android'
@@ -60,4 +60,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
 
     implementation(project(':kdiffer'))
+
+    testImplementation "junit:junit:4.13.2"
 }
