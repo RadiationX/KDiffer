@@ -1,4 +1,4 @@
-package ru.radiationx.kdiffersample
+package ru.radiationx.kdiffersample.adapter
 
 import androidx.core.view.isVisible
 import ru.radiationx.kdiffer.dsl.ext.call
@@ -8,6 +8,9 @@ import ru.radiationx.kdiffer.mutableLiveDiffer
 import ru.radiationx.kdiffersample.data.entity.CommentEntity
 import ru.radiationx.kdiffersample.data.entity.PostEntity
 import ru.radiationx.kdiffersample.databinding.ItemPostBinding
+import ru.radiationx.kdiffersample.formatCounter
+import ru.radiationx.kdiffersample.formatDate
+import ru.radiationx.kdiffersample.formatHtml
 
 class DifferPostItemViewHolder(
     private val binding: ItemPostBinding

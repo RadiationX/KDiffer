@@ -1,4 +1,4 @@
-package ru.radiationx.kdiffersample
+package ru.radiationx.kdiffersample.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import ru.radiationx.kdiffersample.data.entity.PostEntity

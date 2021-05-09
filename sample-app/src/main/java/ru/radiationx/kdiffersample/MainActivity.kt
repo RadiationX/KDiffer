@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.ListAdapter
 import by.kirich1409.viewbindingdelegate.viewBinding
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import ru.radiationx.kdiffersample.adapter.DefaultPostAdapter
+import ru.radiationx.kdiffersample.adapter.DifferPostAdapter
+import ru.radiationx.kdiffersample.adapter.PostDecorator
 import ru.radiationx.kdiffersample.data.FeedRepository
 import ru.radiationx.kdiffersample.data.entity.PostEntity
 import ru.radiationx.kdiffersample.databinding.ActivityMainBinding

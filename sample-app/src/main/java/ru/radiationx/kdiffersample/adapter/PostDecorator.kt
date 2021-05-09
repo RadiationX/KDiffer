@@ -1,4 +1,4 @@
-package ru.radiationx.kdiffersample
+package ru.radiationx.kdiffersample.adapter
 
 import android.graphics.Rect
 import android.view.View

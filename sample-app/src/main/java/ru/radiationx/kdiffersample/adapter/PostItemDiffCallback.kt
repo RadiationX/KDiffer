@@ -1,4 +1,4 @@
-package ru.radiationx.kdiffersample
+package ru.radiationx.kdiffersample.adapter
 
 import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
