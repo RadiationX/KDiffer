@@ -18,6 +18,8 @@ import ru.radiationx.kdiffersample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
+    private val repository = FeedRepository()
+    private val viewModel = MainViewModel(repository)
     private val binding by viewBinding<ActivityMainBinding>()
     private var activeDiffer = false
 
@@ -29,7 +31,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
         updateTitle()
 
-        val viewModel = MainViewModel(FeedRepository())
 
         with(binding.recyclerView) {
             layoutManager = LinearLayoutManager(context)
@@ -46,6 +47,16 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         viewModel.postsItemsState.onEach {
             postAdapter.submitList(it)
         }.launchIn(lifecycleScope)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        repository.initTimer()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        repository.cancelTimer()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -1,88 +1,90 @@
 package ru.radiationx.kdiffersample.data
 
 import android.util.Log
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
-import ru.radiationx.kdiffersample.data.entity.CommentUpdateEntity
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.launch
+import ru.radiationx.kdiffersample.data.entity.CommentEntity
 import ru.radiationx.kdiffersample.data.entity.PostEntity
-import ru.radiationx.kdiffersample.data.entity.PostUpdateEntity
+import java.util.*
+import kotlin.concurrent.fixedRateTimer
 
 class FeedRepository {
 
-    val feedDataSource = FeedDataSource()
-    val updatesDataSource = UpdatesDataSource()
+    private val scope = CoroutineScope(Dispatchers.IO)
 
-    fun observe(): Flow<List<PostEntity>> {
-        return flow<List<PostEntity>> {
-            emit(feedDataSource.getPosts())
+    private val posts = (1 until 25).map {
+        createPost(it)
+    }
+
+    private val updatesState = MutableStateFlow(posts)
+
+    private var timer: Timer? = null
+
+    fun initTimer() {
+        cancelTimer()
+        timer = fixedRateTimer(period = (1000 / 10f).toLong()) {
+            updatePosts()
         }
-            .combine(updatesDataSource.observePosts()) { posts: List<PostEntity>, updates: List<PostUpdateEntity> ->
-                posts.map { post ->
-                    val update = updates.firstOrNull { post.id == it.postId }
-                    if (post.id == update?.postId) {
-                        updatePost(post, update)
-                    } else {
-                        post
-                    }
-                }
-            }
     }
 
-    /*fun observe1(): Flow<List<PostEntity>> {
-        return flow<List<PostEntity>> {
-            emit(feedDataSource.getPosts())
+    fun cancelTimer() {
+        timer?.cancel()
+        timer?.purge()
+        timer = null
+    }
+
+    fun observe(): Flow<List<PostEntity>> = updatesState
+
+    private fun createPost(index: Int) = PostEntity(
+        id = "post_$index",
+        authorName = "Author Name $index",
+        authorAvatarUrl = "url",
+        groupName = "Group Name $index",
+        date = Date(),
+        contentText = "Hello there in post $index. Watch <a href=\"https://google.com/\">this awesome link</a> and how beautiful this <b>rich<i>text<u>in post</u></i></b>.",
+        contentImage = null,
+        likes = 0,
+        comments = 0,
+        saves = 0,
+        views = 0,
+        liked = false,
+        commented = false,
+        saved = false,
+        comment = CommentEntity(
+            id = "post_comment_$index",
+            postId = "post_$index",
+            authorName = "Another author $index",
+            authorAvatarUrl = "url",
+            commentText = "Comment with <a href=\"https://google.com/\">awesome link</a> and <b>rich<i>text<u>in comment</u></i></b>.",
+            likes = 0,
+            liked = false
+        )
+    )
+
+    private fun updatePosts() {
+        scope.launch {
+            updatesState.value = updatesState.value.mapIndexed { index, post ->
+                post.copy(
+                    likes = (post.likes + randomLike()).coerceAtLeast(0),
+                    comments = (post.comments + randomComment()).coerceAtLeast(0),
+                    saves = (post.saves + randomSaves()).coerceAtLeast(0),
+                    views = (post.views + randomViews()).coerceAtLeast(0),
+                    comment = post.comment?.let { comment ->
+                        comment.copy(
+                            likes = (comment.likes + randomSaves()).coerceAtLeast(0)
+                        )
+                    }
+                )
+            }
         }
-            .combine(updatesDataSource.observePosts()) { posts: List<PostEntity>, update: PostUpdateEntity ->
-                Log.d("kekeke", "combine posts")
-                posts.map {
-                    if (it.id == update.postId) {
-                        updatePost(it, update)
-                    } else {
-                        it
-                    }
-                }
-            }
-            .combine(updatesDataSource.observeNewComments()) { posts: List<PostEntity>, comment: CommentEntity ->
-                Log.d("kekeke", "combine new comments")
-                posts.map {
-                    if (it.id == comment.postId) {
-                        it.copy(comment = comment)
-                    } else {
-                        it
-                    }
-                }
-            }
-            .combine(updatesDataSource.observeComments()) { posts: List<PostEntity>, update: CommentUpdateEntity ->
-                Log.d("kekeke", "combine comments")
-                posts.map {
-                    if (it.id == update.postId) {
-                        updateComment(it, update)
-                    } else {
-                        it
-                    }
-                }
-            }
-    }*/
-
-    private fun updateComment(postEntity: PostEntity, update: CommentUpdateEntity): PostEntity {
-        return postEntity.copy(
-            comment = postEntity.comment?.copy(
-                likes = update.likes,
-                liked = update.liked
-            )
-        )
     }
 
-    private fun updatePost(postEntity: PostEntity, update: PostUpdateEntity): PostEntity {
-        return postEntity.copy(
-            likes = update.likes,
-            comments = update.comments,
-            saves = update.saves,
-            views = update.views,
-            liked = update.liked,
-            commented = update.commented,
-            saved = update.saved,
-        )
-    }
+    private fun randomLike() = (-5..150).random()
+    private fun randomComment() = (-1..3).random()
+    private fun randomSaves() = (-1..2).random()
+    private fun randomViews() = (0..100).random()
 }

@@ -1,17 +1,15 @@
 package ru.radiationx.kdiffersample
 
-import android.text.format.DateUtils
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.plus
 import ru.radiationx.kdiffersample.data.FeedRepository
 import ru.radiationx.kdiffersample.data.entity.PostEntity
-import java.text.CharacterIterator
-import java.text.StringCharacterIterator
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 class MainViewModel(
     private val repository: FeedRepository
