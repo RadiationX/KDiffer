@@ -14,6 +14,33 @@ class LiveDifferSamples {
 
     data class SubModel(val text: String, val size: Int)
 
+    fun syntax() {
+        val subMutableDiffer = mutableLiveDiffer<SubModel> { /* live differ context */ }
+        val subStatelessDiffer = statelessLiveDiffer<SubModel> { /* live differ context */ }
+
+        val differ = mutableLiveDiffer<Model> {
+            /* live differ context */
+
+            value { it.date } call { /* called when "date" equals == false */ }
+            ref { it.date } call { /* called when "date" references are different */ }
+            any { it.date } call { /* called always after accept new model */ }
+            value { it.sub.text } call { /* of course also possible select nested fields */ }
+
+            // differ for field. inner field selectors will call only if "sub" changed
+            // !!! differ instance also will clear, after clear "parent" differ
+            value { it.sub } withMutableDiffer { /* live differ context */ }
+            value { it.sub } withStatelessDiffer { /* live differ context */ }
+            value { it.sub }.registerMutableDiffer(subMutableDiffer)
+            value { it.sub }.registerStatelessDiffer(subStatelessDiffer)
+
+            onClear { /* call when clear() differ */ }
+        }
+
+        val data = Model(Date(), SubModel("text1", 1))
+        differ.accept(data)
+        differ.clear()
+    }
+
     fun basic() {
         val subMutableDiffer = mutableLiveDiffer<SubModel> {
             value { it.text } call {
