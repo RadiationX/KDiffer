@@ -1,7 +1,6 @@
 package ru.radiationx.kdiffersample
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +32,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         updateTitle()
+
+        LiveDifferSamples().basic()
 
         with(binding.recyclerView) {
             layoutManager = LinearLayoutManager(context)
