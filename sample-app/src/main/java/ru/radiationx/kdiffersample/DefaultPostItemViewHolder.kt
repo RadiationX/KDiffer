@@ -2,7 +2,6 @@ package ru.radiationx.kdiffersample
 
 import android.text.Html
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.RecyclerView
 import ru.radiationx.kdiffersample.databinding.ItemPostBinding
 
 class DefaultPostItemViewHolder(
@@ -22,7 +21,7 @@ class DefaultPostItemViewHolder(
         }
 
         with(binding.postContent) {
-            postContentText.text = Html.fromHtml(content.contentText)
+            postContentText.text = content.contentText?.let { Html.fromHtml(it) }
             postContentText.isVisible = content.contentText != null
             postContentImage.isVisible = content.contentImage != null
         }
@@ -37,7 +36,7 @@ class DefaultPostItemViewHolder(
         with(binding.postFooterComment) {
             root.isVisible = comment != null
             commentAuthorName.text = comment?.authorName
-            commentText.text = comment?.commentText
+            commentText.text = comment?.commentText?.let { Html.fromHtml(it) }
             commentLikes.text = comment?.likes
         }
     }

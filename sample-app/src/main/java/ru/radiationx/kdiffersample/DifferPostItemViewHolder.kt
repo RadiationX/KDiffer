@@ -71,7 +71,7 @@ class DifferPostItemViewHolder(
             commentBinding.commentAuthorName.text = it
         }
         value { it?.commentText } call {
-            commentBinding.commentText.text = it
+            commentBinding.commentText.text = Html.fromHtml(it)
         }
         value { it?.likes } call {
             commentBinding.commentLikes.text = it ?: "0"

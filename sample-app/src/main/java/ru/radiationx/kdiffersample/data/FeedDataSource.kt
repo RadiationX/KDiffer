@@ -1,5 +1,6 @@
 package ru.radiationx.kdiffersample.data
 
+import ru.radiationx.kdiffersample.data.entity.CommentEntity
 import ru.radiationx.kdiffersample.data.entity.PostEntity
 import java.util.*
 
@@ -24,7 +25,15 @@ class FeedDataSource {
         liked = false,
         commented = false,
         saved = false,
-        comment = null
+        comment = CommentEntity(
+            id = "post_comment_$index",
+            postId = "post_$index",
+            authorName = "Another author $index",
+            authorAvatarUrl = "url",
+            commentText = "Comment with <a href=\"https://google.com/\">awesome link</a> and <b>rich<i>text<u>in comment</u></i></b>.",
+            likes = 0,
+            liked = false
+        )
     )
 
 }
