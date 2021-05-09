@@ -2,42 +2,40 @@ package ru.radiationx.kdiffersample
 
 import android.text.Html
 import androidx.core.view.isVisible
+import ru.radiationx.kdiffersample.data.entity.PostEntity
 import ru.radiationx.kdiffersample.databinding.ItemPostBinding
 
 class DefaultPostItemViewHolder(
     private val binding: ItemPostBinding
 ) : PostItemViewHolder(binding) {
 
-    override fun bind(item: PostItemState, payloads: MutableList<Any>?) {
-        val header = item.header
-        val content = item.content
-        val footer = item.footer
-        val comment = item.comment
+    override fun bind(item: PostEntity, payloads: MutableList<Any>?) {
 
         with(binding.postHeader) {
-            postGroupName.text = header.groupName
-            postAuthorName.text = header.authorName
-            postDate.text = header.date
+            postGroupName.text = item.groupName
+            postAuthorName.text = item.authorName
+            postDate.text = item.date.formatDate()
         }
 
         with(binding.postContent) {
-            postContentText.text = content.contentText?.let { Html.fromHtml(it) }
-            postContentText.isVisible = content.contentText != null
-            postContentImage.isVisible = content.contentImage != null
+            postContentText.text = item.contentText?.formatHtml()
+            postContentText.isVisible = item.contentText != null
+            postContentImage.isVisible = item.contentImage != null
         }
 
         with(binding.postFooter) {
-            postFooterLikes.text = footer.likes
-            postFooterComments.text = footer.comments
-            postFooterSaves.text = footer.saves
-            postFooterViews.text = footer.views
+            postFooterLikes.text = item.likes.formatCounter()
+            postFooterComments.text = item.comments.formatCounter()
+            postFooterSaves.text = item.saves.formatCounter()
+            postFooterViews.text = item.views.formatCounter()
         }
 
         with(binding.postFooterComment) {
+            val comment = item.comment
             root.isVisible = comment != null
             commentAuthorName.text = comment?.authorName
-            commentText.text = comment?.commentText?.let { Html.fromHtml(it) }
-            commentLikes.text = comment?.likes
+            commentText.text = comment?.commentText?.formatHtml()
+            commentLikes.text = comment?.likes?.formatCounter()
         }
     }
 }

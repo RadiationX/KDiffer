@@ -7,7 +7,7 @@ import java.util.*
 class FeedDataSource {
 
     suspend fun getPosts(): List<PostEntity> {
-        return (1 until 10).map { createPost(it) }
+        return (1 until 25).map { createPost(it) }
     }
 
     private fun createPost(index: Int) = PostEntity(

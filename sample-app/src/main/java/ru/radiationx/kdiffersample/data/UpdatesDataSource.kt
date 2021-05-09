@@ -16,7 +16,7 @@ class UpdatesDataSource {
 
     val scope = CoroutineScope(Dispatchers.IO)
 
-    private val updates = (1 until 10).map {
+    private val updates = (1 until 25).map {
         PostUpdateEntity(
             postId = "post_$it",
             likes = 0,
@@ -32,7 +32,7 @@ class UpdatesDataSource {
     private val updatesState = MutableStateFlow(updates)
 
     init {
-        val timer = fixedRateTimer(period = (1000 / 85f).toLong()) {
+        val timer = fixedRateTimer(period = (1000 / 60f).toLong()) {
             updatePosts()
         }
     }

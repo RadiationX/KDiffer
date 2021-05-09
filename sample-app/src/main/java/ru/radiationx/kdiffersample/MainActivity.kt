@@ -13,6 +13,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.radiationx.kdiffersample.data.FeedRepository
+import ru.radiationx.kdiffersample.data.entity.PostEntity
 import ru.radiationx.kdiffersample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
@@ -72,7 +73,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
     }
 
-    private fun getActualAdapter(): ListAdapter<PostItemState, *> = if (activeDiffer) {
+    private fun getActualAdapter(): ListAdapter<PostEntity, *> = if (activeDiffer) {
         differPostAdapter
     } else {
         defaultPostAdapter

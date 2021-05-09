@@ -3,10 +3,11 @@ package ru.radiationx.kdiffersample
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
+import ru.radiationx.kdiffersample.data.entity.PostEntity
 import ru.radiationx.kdiffersample.databinding.ItemPostBinding
 
 abstract class PostAdapter<VH : PostItemViewHolder> :
-    ListAdapter<PostItemState, VH>(PostItemDiffCallback) {
+    ListAdapter<PostEntity, VH>(PostItemDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val binding = ItemPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
