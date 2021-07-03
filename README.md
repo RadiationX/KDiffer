@@ -13,7 +13,7 @@ allprojects {
 }
 
 dependencies {
-    implementation "ru.radiationx:kdiffer:1.0.0"
+    implementation "ru.radiationx:kdiffer:1.0.1"
 }
 ```
 ## Examples
